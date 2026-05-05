@@ -187,7 +187,7 @@ class Sistema:
 
                 self.agregar_cliente(cliente)
 
-                print(self.factura_actual) //Breakpoints
+                print(self.factura_actual) #Breakpoint para el debug
 
             # ================= SALIR =================
             elif opcion_principal == 4:
