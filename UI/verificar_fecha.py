@@ -1,5 +1,5 @@
 from datetime import datetime
-from limpiarPantalla import limpiar_pantalla
+from UI.limpiarPantalla import limpiar_pantalla
 
 def verificar_fecha(mensaje):
     while True:
