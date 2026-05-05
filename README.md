@@ -6,29 +6,29 @@ El sistema fue desarrollado aplicando principios de Programación Orientada a Ob
 
 ---
 
-## 📌 Funcionalidades
+## Funcionalidades
 
-- ✅ Registro de productos:
+ **Registro de productos:**
   - Fertilizantes
   - Control de plagas
   - Antibióticos (bovinos y porcinos)
 
-- ✅ Gestión de compras:
+ **Gestión de compras:**
   - Selección de productos por ID
   - Agregado de múltiples productos a una factura
 
-- ✅ Generación de facturas:
+ **Generación de facturas:**
   - Cálculo automático del total
   - Visualización estructurada
 
-- ✅ Validación de datos:
+ **Validación de datos:**
   - Entradas numéricas
   - Cadenas de texto
   - Fechas
 
 ---
 
-## 🧠 Conceptos aplicados
+## Conceptos aplicados
 
 ### 🔹 Herencia
 Se implementó en:
@@ -36,8 +36,6 @@ Se implementó en:
 - `ProductoControl` → `ControlPlagas`, `Fertilizante`
 
 Esto permitió reutilizar atributos comunes y especializar comportamientos.
-
----
 
 ### 🔹 Composición
 La clase `Factura` contiene múltiples productos:
