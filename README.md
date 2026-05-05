@@ -4,8 +4,6 @@ Este proyecto consiste en el desarrollo de un sistema de facturación orientado 
 
 El sistema fue desarrollado aplicando principios de Programación Orientada a Objetos (POO), destacando el uso de **herencia, composición y encapsulamiento**.
 
----
-
 ## Funcionalidades
 
  **Registro de productos:**
@@ -40,5 +38,4 @@ Esto permitió reutilizar atributos comunes y especializar comportamientos.
 ### 🔹 Composición
 La clase `Factura` contiene múltiples productos:
 
-```python
-lista_productos = []
+`lista_productos = []`
