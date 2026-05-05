@@ -4,6 +4,7 @@ class Cliente:
         _cantidad_clientes += 1
         self.nombre = nombre
         self.cedula = cedula
-        self.historial_compras = []
+        self._cant_comprar = 0
+        self.historial_compras = {}
 
         

@@ -1,11 +1,11 @@
 from limpiarPantalla import limpiar_pantalla
 
-def verificar_cadenas(mensaje):
+def verificar_valores_numericos(mensaje):
     while(True):
-        cadena = input(mensaje)
-        if(isinstance(cadena,str) and len(cadena) > 0):
+        numero = input(mensaje)
+        if(numero.isdigit() and len(int(numero)) > 0):
             break
         else:
             print("Ingrese una opción válida...\n")
             limpiar_pantalla()
-    return cadena
+    return int(numero)

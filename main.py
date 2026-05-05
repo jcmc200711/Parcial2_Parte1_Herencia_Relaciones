@@ -1,5 +1,5 @@
-from UI.sistema import SistemaVentas
+from  sistema import Sistema
 
 if __name__ == "__main__":
-    sistema = SistemaVentas()
+    sistema = Sistema()
     sistema.ejecutar()
