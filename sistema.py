@@ -187,7 +187,7 @@ class Sistema:
 
                 self.agregar_cliente(cliente)
 
-                print(self.factura_actual)
+                print(self.factura_actual) //Breakpoints
 
             # ================= SALIR =================
             elif opcion_principal == 4:
