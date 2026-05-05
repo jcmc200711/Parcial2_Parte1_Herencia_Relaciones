@@ -4,156 +4,192 @@ from Modelo.ClasesHijas.Fertilizantes import Fertilizante
 from Modelo.ClasesHijas.ControlPlagas import ControlPlagas
 from Modelo.ClasesHijas.AntibioticosBovinos import AntibioticoBovino
 from Modelo.ClasesHijas.AntibioticosPorcinos import AntibioticoPorcino
+
 from UI.limpiarPantalla import limpiar_pantalla
 from UI.menu_opciones import menu_opciones
 from UI.verificar_cadenas import verificar_cadenas
 from UI.verificar_valores_numericos import verificar_valores_numericos
 from UI.verificar_fecha import verificar_fecha
 
+
 class Sistema:
     __productos = 0
+
     def __init__(self):
-        self.productos = {'productos_control':{'plagas': {},'fertilizantes':{}},'antibioticos':{'porcinos': {},'bovinos':{}}}
+        self.productos = {
+            'productos_control': {'plagas': {}, 'fertilizantes': {}},
+            'antibioticos': {'porcinos': {}, 'bovinos': {}}
+        }
         self.clientes = {}
+        self.factura_actual = None   # 🔥 SOLUCIÓN CLAVE
 
     def agregar_cliente(self, cliente):
         self.clientes[cliente.cedula] = cliente
 
-    
     def _imprimir_subcategorias(self, nombre_cat, subcats):
-        print(f"Categoría: {nombre_cat}")
+        print(f"\nCategoría: {nombre_cat}")
         for nombre_sub, productos in subcats.items():
             print(f"  [{nombre_sub}]: {len(productos)} artículos registrados.")
-    
+
     def mostrar_productos(self):
+        print("\n===== PRODUCTOS DISPONIBLES =====")
+
         for nombre_cat, subcats in self.productos.items():
-            self._imprimir_subcategorias(nombre_cat, subcats)
-    
-    def buscar_producto_por_id(self,id):
-        # Recorremos el primer nivel: productos_control, antibioticos...
-        for subcategorias in self.productos.items():
-            # Recorremos el segundo nivel: Plagas, Fertilizantes, Porcinos...
-            for  inventario in subcategorias.items():
-            
-            # El operador 'in' en un diccionario busca directamente en las LLAVES
-                if id in inventario:
-                    producto = inventario[id]
-                    return producto
-        print("\n[!] El id no coincide con ningún producto.")
+            print(f"\n🔹 {nombre_cat.upper()}")
+
+            for nombre_sub, productos in subcats.items():
+                print(f"\n  ▸ {nombre_sub.capitalize()}")
+
+                if not productos:
+                    print("     (Sin productos)")
+                else:
+                    for id_prod, prod in productos.items():
+
+                  
+                        precio = prod.precio if hasattr(prod, 'precio') else prod.valor
+
+                        ica = prod._registroICA if hasattr(prod, '_registroICA') else "N/A"
+
+                        print(f"     ID: {id_prod}")
+                        print(f"        Nombre: {prod.nombre}")
+                        print(f"        Precio: ${precio}")
+                    
+                        if ica != "N/A":
+                           print(f"        ICA: {ica}")
+ 
+                        if hasattr(prod, 'frecuencia'):
+                           print(f"        Frecuencia: {prod.frecuencia}")
+
+                        if hasattr(prod, 'periodo_carencia'):
+                           print(f"        Carencia: {prod.periodo_carencia} días")
+
+                        if hasattr(prod, 'tipo_animal'):
+                           print(f"        Tipo: {prod.tipo_animal}")
+
+                        print()
+
+    def buscar_producto_por_id(self, id):
+        for categoria in self.productos.values():
+            for subcat in categoria.values():
+                if id in subcat:
+                    return subcat[id]
         return None
-    
-    def ejecutar(self):    
-        while(True):
-            print("Bienvenido a nuestro sistema de registro de productos de agricultura\n")
-            mensaje_opciones_principales = "Cuál de las siguientes opciones desea elegir:\n"
-            opciones_principales = ["1. Registrar un producto\n",
-            "2. Realizar una compra\n",
-            "3. Expedir su factura\n", "4. Salir\n"]
 
-            ##En esta funcion primero va el mensaje a mostrar, las opciones
-            opcion_principal = menu_opciones(mensaje_opciones_principales,opciones_principales)
+    def ejecutar(self):
+        while True:
+            print("\n=== SISTEMA AGRÍCOLA ===\n")
 
-            if opcion_principal == 1:    
-                mensaje_producto = "¿Qué tipo de producto desea registrar?:\n"
-                tipos_productos = ["1. Producto de Control.\n",
-                "2. Antibiotico\n"]
+            opcion_principal = menu_opciones(
+                "Seleccione una opción:\n",
+                ["1. Registrar un producto\n",
+                 "2. Realizar una compra\n",
+                 "3. Expedir factura\n",
+                 "4. Salir\n"]
+            )
 
-                opcion_tipos_producto = menu_opciones(mensaje_producto, tipos_productos)
-        
+            # ================= REGISTRAR =================
+            if opcion_principal == 1:
 
-                match opcion_tipos_producto:
-                    case 1:
-                        mensaje_productos_control = "¿Desea Control de plagas o Fertilizante?:\n"
-                        tipos_productos_control = ["1. Producto de Control de plagas.\n",
-                        "2. Fertilizante\n"]
-                        opcion_productos_control = menu_opciones(mensaje_productos_control, tipos_productos_control)
+                opcion_tipos_producto = menu_opciones(
+                    "\n¿Qué tipo de producto desea registrar?\n",
+                    ["1. Producto de Control\n", "2. Antibiótico\n"]
+                )
 
-                        match opcion_productos_control:
-                            case 1:
-                                nombre = verificar_cadenas("Ingrese el nombre del producto de control de plagas:\n")
-                                frecuencia = verificar_valores_numericos("Ingrese la frecuencia de aplicacion en dias del producto:\n")
-                                precio = verificar_valores_numericos("Ingrese el valor de su producto:\n")
-                                periodo = verificar_valores_numericos("Ingrese su periodo de carencia del producto:\n")
-                                producto = ControlPlagas(nombre, frecuencia, precio, periodo)
-                                Sistema.__productos+=1
-                                self.productos['productos_control']['flagas'][Sistema.__productos] = producto
-                            case 2:
-                                nombre = verificar_cadenas("Ingrese el nombre del fertilizante:\n")
-                                frecuencia = verificar_valores_numericos("Ingrese la frecuencia de aplicacion en dias del producto:\n")
-                                valor = verificar_valores_numericos("Ingrese el valor de su producto:\n")
-                                ultima_fecha = verificar_fecha("Ingrese la fecha de expiracion de su fertilizante:\n")
-                                producto = Fertilizante(nombre, frecuencia, valor, ultima_fecha)
-                                Sistema.__productos+=1
-                                self.productos['productos_control']['fertilizantes'][Sistema.__productos] = producto
-                            case _:
-                                print("Opción inválida...\n")
-                    case 2:
-                        mensaje_productos_antibiotico = "¿Desea antibiotico de Bovinos o Porcinos?:\n"
-                        tipos_productos_antibiotico = ["1. Antibiotico de Bovinos.\n",
-                        "2. Antibiotico de Porcinos\n"]
-                        opcion_productos_antibiotico = menu_opciones(mensaje_productos_antibiotico, tipos_productos_antibiotico)
-                        match opcion_productos_antibiotico:
-                            case 1:
-                                nombre = verificar_cadenas("Ingrese el nombre del antibiotico para bovinos:\n")
-                                dosis = verificar_valores_numericos("Ingrese la dosis:\n")
-                                precio = verificar_valores_numericos("Ingrese el valor del antibiotico:\n")
-                                producto = AntibioticoBovino(nombre, dosis, precio)
-                                Sistema.__productos+=1
-                                self.productos['antibioticos']['bovinos'][Sistema.__productos] = producto
-                            case 2:
-                                nombre = verificar_cadenas("Ingrese el nombre del antibiotico para porcinos:\n")
-                                dosis = verificar_valores_numericos("Ingrese la dosis:\n")
-                                precio = verificar_valores_numericos("Ingrese el precio del antibiotico:\n")
-                                producto = AntibioticoPorcino(nombre, dosis, precio)
-                                Sistema.__productos+=1
-                                self.productos['antibioticos']['porcinos'][Sistema.__productos] = producto
-                            case _:
-                                print("Opción inválida...\n")
-                    case _:
-                        print("Opción inválida...\n")
-            if opcion_principal == 2:
-                factura = Factura()
-                try: 
-                    while(True):
-                        print("Qué producto desea comprar?:\n")
-                        self.mostrar_productos()
-                        try:
-                            opcion_producto = verificar_valores_numericos("")
-                            if opcion_producto > 0 and (opcion_producto <= len(self.productos)):
-                                producto = self.buscar_producto_por_id(opcion_producto)
-                                factura.agregar_producto(producto)
-                                opcion_otro = verificar_valores_numericos("Desea agregar otro producto?:\n 1. Si\n 2.No\n")
-                                if opcion_otro == 1:
-                                    limpiar_pantalla()
-                                else:
-                                    break
-                        except:
-                            print("Ingrese un producto válido\n")
-                            limpiar_pantalla()
+                if opcion_tipos_producto == 1:
 
-                except:
-                    print("Ingrese una cedula válida...\n")
-            if opcion_principal == 3:
-                nombre_cliente = verificar_cadenas("Ingrese su nombre:\n")
-                cedula_cliente = verificar_valores_numericos("Ingrese su cedula:\n")
-                cliente = Cliente(nombre_cliente, cedula_cliente)
-                cliente._cant_comprar+=1
-                print(factura)
-                cliente.historial_compras[cliente._cant_comprar] = factura
-            if opcion_principal == 4:
-                print("Saliendo...\n")
+                    opcion_control = menu_opciones(
+                        "\n¿Tipo de producto de control?\n",
+                        ["1. Control de plagas\n", "2. Fertilizante\n"]
+                    )
+
+                    if opcion_control == 1:
+                        nombre = verificar_cadenas("\nNombre:")
+                        frecuencia = verificar_valores_numericos("Frecuencia (días):")
+                        precio = verificar_valores_numericos("Precio:")
+                        periodo = verificar_valores_numericos("Periodo de carencia:")
+                        ica = verificar_valores_numericos("Ingrese el registro ICA:")
+
+                        producto = ControlPlagas(ica, nombre, frecuencia, precio, periodo)
+
+                        Sistema.__productos += 1
+                        self.productos['productos_control']['plagas'][Sistema.__productos] = producto
+
+                    elif opcion_control == 2:
+                        nombre = verificar_cadenas("\nNombre:")
+                        frecuencia = verificar_valores_numericos("Frecuencia:")
+                        valor = verificar_valores_numericos("Precio:")
+                        fecha = verificar_fecha("Fecha:")
+                        ica = verificar_valores_numericos("Ingrese el registro ICA:")
+
+                        producto = Fertilizante(ica, nombre, frecuencia, valor, fecha)
+
+                        Sistema.__productos += 1
+                        self.productos['productos_control']['fertilizantes'][Sistema.__productos] = producto
+
+                elif opcion_tipos_producto == 2:
+
+                    opcion_antibiotico = menu_opciones(
+                        "¿Tipo de antibiotico?\n",
+                        ["1. Bovino\n", "2. Porcino\n"]
+                    )
+
+                    nombre = verificar_cadenas("\nNombre:")
+                    dosis = verificar_valores_numericos("Dosis:")
+                    precio = verificar_valores_numericos("Precio:")
+
+                    if opcion_antibiotico == 1:
+                        producto = AntibioticoBovino(nombre, dosis, precio)
+                        Sistema.__productos += 1
+                        self.productos['antibioticos']['bovinos'][Sistema.__productos] = producto
+
+                    else:
+                        producto = AntibioticoPorcino(nombre, dosis, precio)
+                        Sistema.__productos += 1
+                        self.productos['antibioticos']['porcinos'][Sistema.__productos] = producto
+
+                print("\n✔ Producto registrado correctamente\n")
+
+            # ================= COMPRA =================
+            elif opcion_principal == 2:
+
+                self.factura_actual = Factura()
+
+                while True:
+                    print("\n--- PRODUCTOS DISPONIBLES ---")
+                    self.mostrar_productos()
+
+                    idp = verificar_valores_numericos("Ingrese ID del producto:\n")
+                    producto = self.buscar_producto_por_id(idp)
+
+                    if producto:
+                        self.factura_actual.agregar_producto(producto)
+                        print("✔ Producto agregado\n")
+                    else:
+                        print("❌ Producto no encontrado\n")
+
+                    op = verificar_valores_numericos("1. Agregar otro\n2. Terminar\n")
+                    if op == 2:
+                        break
+
+            # ================= FACTURA =================
+            elif opcion_principal == 3:
+
+                if not self.factura_actual:
+                    print("❌ No hay compra realizada\n")
+                    continue
+
+                nombre = verificar_cadenas("\nNombre cliente:")
+                cedula = verificar_valores_numericos("Cédula:")
+
+                cliente = Cliente(nombre, cedula)
+                cliente._cant_comprar += 1
+                cliente.historial_compras[cliente._cant_comprar] = self.factura_actual
+
+                self.agregar_cliente(cliente)
+
+                print(self.factura_actual)
+
+            # ================= SALIR =================
+            elif opcion_principal == 4:
+                print("Saliendo...")
                 break
-            else:
-                print("Ingrese una opción válida...\n")
-
-
-            
-            
-
-    
-    
-
-
-
-
-
