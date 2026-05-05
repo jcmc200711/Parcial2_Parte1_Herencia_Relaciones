@@ -7,8 +7,8 @@ sys.path.append(ruta_padre)
 from ClasesPadre.Antibiotico import Antibiotico
 
 class AntibioticoBovino(Antibiotico):
-    def __init__(self, _id, nombre, dosis, precio):
-        super().__init__(_id, nombre, dosis, precio)
-        self.tipo_animal = "bovino"
+    def __init__(self, nombre, dosis, precio):
+        super().__init__(nombre, dosis, "bovino", precio)
+        
             
         
