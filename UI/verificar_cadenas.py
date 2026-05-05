@@ -1,4 +1,4 @@
-from limpiarPantalla import limpiar_pantalla
+from UI.limpiarPantalla import limpiar_pantalla
 
 def verificar_cadenas(mensaje):
     while(True):
