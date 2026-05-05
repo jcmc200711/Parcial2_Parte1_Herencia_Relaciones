@@ -7,6 +7,6 @@ sys.path.append(ruta_padre)
 from ClasesPadre.ProductoDeControl import ProductoControl
 
 class ControlPlagas(ProductoControl):
-    def __init__(self, _registroICA, nombre, frecuencia, valor, periodo_carencia = 1):
-        super().__init__(_registroICA, nombre, frecuencia, valor)
+    def __init__(self, registroICA, nombre, frecuencia, valor, periodo_carencia):
+        super().__init__(registroICA, nombre, frecuencia, valor)
         self.periodo_carencia = periodo_carencia
