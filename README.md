@@ -24,8 +24,6 @@ El sistema fue desarrollado aplicando principios de Programación Orientada a Ob
   - Cadenas de texto
   - Fechas
 
----
-
 ## Conceptos aplicados
 
 ### 🔹 Herencia
