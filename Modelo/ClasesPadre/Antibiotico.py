@@ -9,4 +9,4 @@ class Antibiotico:
         self.precio = precio
 
     def __str__(self):
-        return f"Id: {self._id:10} | Nombre: {self.nombre:15} | Dosis: {self.dosis:5} | Tipo de animal: ${self.tipo_animal:15} | Precio: ${self.precio:,}"
+        return f"Id: {self._id:10} | Nombre: {self.nombre:15} | Dosis: {self.dosis:5} | Tipo de animal: {self.tipo_animal:15} | Precio: ${self.precio:,}"
