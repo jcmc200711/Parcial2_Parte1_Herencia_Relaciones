@@ -1,10 +1,6 @@
 import os
+import subprocess
 
 def limpiar_pantalla():
-    if os.name == 'nt':
-        os.system('cls')
-    else:
-        os.system('clear')
-
-
-limpiar_pantalla()
+    comando = 'cls' if os.name == 'nt' else 'clear'
+    subprocess.run(comando, shell=True)
