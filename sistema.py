@@ -21,7 +21,7 @@ class Sistema:
             'antibioticos': {'porcinos': {}, 'bovinos': {}}
         }
         self.clientes = {}
-        self.factura_actual = None   # 🔥 SOLUCIÓN CLAVE
+        self.factura_actual = None  
 
     def agregar_cliente(self, cliente):
         self.clientes[cliente.cedula] = cliente
