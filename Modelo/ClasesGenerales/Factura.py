@@ -20,6 +20,13 @@ class Factura:
         elif hasattr(producto, 'valor'):
             self.valor_total += producto.valor
 
+    def to_dict(self):
+        return {
+            'fecha': str(self.fecha),
+            'valor_total': self.valor_total,
+            'lista_productos': [f"{p.nombre} (${p.precio})" for p in self.lista_productos]
+        }
+
     def __str__(self):
         encabezado = f"\n{'='*40}\n"
         encabezado += f"FACTURA N°: {self.id}\n"
@@ -29,9 +36,9 @@ class Factura:
         encabezado += f"{'-'*40}\n"
 
         cuerpo = ""
-        for p in self.lista_productos:
-            precio = p.precio if hasattr(p, 'precio') else p.valor
-            cuerpo += f"{p.nombre:<20} ${precio:>17,}\n"
+        for producto in self.lista_productos:
+            precio = producto.precio
+            cuerpo += f"{producto.nombre:<20} ${precio:>17,}\n"
 
         pie = f"{'-'*40}\n"
         pie += f"{'TOTAL A PAGAR:':<20} ${self.valor_total:>17,}\n"

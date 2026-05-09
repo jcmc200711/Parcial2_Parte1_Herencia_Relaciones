@@ -1,8 +1,7 @@
 import sys
 import os
-
-ruta_actual = os.path.abspath(os.path.dirname(__file__))
-sys.path.append(ruta_actual)
+ruta_padre = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(ruta_padre)
 
 from Modelo.ClasesGenerales.Factura import Factura
 from Modelo.ClasesHijas.AntibioticosBovinos import AntibioticoBovino

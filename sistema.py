@@ -5,12 +5,13 @@ from Modelo.ClasesHijas.ControlPlagas import ControlPlagas
 from Modelo.ClasesHijas.AntibioticosBovinos import AntibioticoBovino
 from Modelo.ClasesHijas.AntibioticosPorcinos import AntibioticoPorcino
 
-from UI.limpiarPantalla import limpiar_pantalla
 from UI.menu_opciones import menu_opciones
 from UI.verificar_cadenas import verificar_cadenas
 from UI.verificar_valores_numericos import verificar_valores_numericos
 from UI.verificar_fecha import verificar_fecha
-
+from CRUD.buscar_por_cedula import buscar_por_cedula
+from CRUD.guardar_cliente import guardar_o_actualizar_cliente
+from CRUD.borrar_registros import resetear_archivo_datos
 
 class Sistema:
     __productos = 0
@@ -75,6 +76,31 @@ class Sistema:
                     return subcat[id]
         return None
 
+    def mostrar_facturas(self, facturas_dict):
+        if not facturas_dict:
+            print("\n[!] No hay facturas registradas.")
+            return
+
+        for id_f, datos in facturas_dict.items():
+            # TODO lo de abajo debe estar indentado para que se repita por cada factura
+            print("\n" + "="*40)
+            print(f"FACTURA N°: {id_f}")
+            print(f"FECHA: {datos.get('fecha')}")
+            print("-" * 40)
+        
+            # Esta parte estaba "afuera" en tu código:
+            productos = datos.get('lista_productos', [])
+            if not productos:
+                print("   (Factura sin productos registrados)")
+            else:
+                for p in productos:
+                    print(f"• {p}") 
+
+            print("-" * 40)
+            print(f"TOTAL PAGADO: ${datos.get('valor_total')}")
+            print("="*40)
+
+
     def ejecutar(self):
         while True:
             print("\n=== SISTEMA AGRÍCOLA ===\n")
@@ -84,7 +110,9 @@ class Sistema:
                 ["1. Registrar un producto\n",
                  "2. Realizar una compra\n",
                  "3. Expedir factura\n",
-                 "4. Salir\n"]
+                 "4. Buscar las facturas de un cliente por cedula\n",
+                 "5. Borrar registros\n",
+                 "6. Salir\n"]
             )
 
             # ================= REGISTRAR =================
@@ -117,11 +145,11 @@ class Sistema:
                     elif opcion_control == 2:
                         nombre = verificar_cadenas("\nNombre:")
                         frecuencia = verificar_valores_numericos("Frecuencia:")
-                        valor = verificar_valores_numericos("Precio:")
+                        precio = verificar_valores_numericos("Precio:")
                         fecha = verificar_fecha("Fecha:")
                         ica = verificar_valores_numericos("Ingrese el registro ICA:")
 
-                        producto = Fertilizante(ica, nombre, frecuencia, valor, fecha)
+                        producto = Fertilizante(ica, nombre, frecuencia, precio, fecha)
 
                         Sistema.__productos += 1
                         self.productos['productos_control']['fertilizantes'][Sistema.__productos] = producto
@@ -189,7 +217,30 @@ class Sistema:
 
                 print(self.factura_actual)
 
-            # ================= SALIR =================
+            # ================= BUSCAR CLIENTE POR CEDULA =================
             elif opcion_principal == 4:
-                print("Saliendo...")
+                for cliente in self.clientes.values():
+                    historial_limpio = {}
+                    for id_factura, factura_obj in cliente.historial_compras.items():
+                        historial_limpio[id_factura] = factura_obj.to_dict()
+
+                    guardar_o_actualizar_cliente(cliente.cedula, cliente.nombre, historial_limpio)
+                cedula_buscar = verificar_valores_numericos("Ingrese la cedula para buscar las facturas del cliente:\n")
+                facturas, nombre_cliente = buscar_por_cedula(cedula_buscar)
+                print(f"Nombre del cliente: {nombre_cliente}\n")
+                print("Sus facturas:\n")
+                self.mostrar_facturas(facturas)
+
+            # ================= BORRAR LOS DATOS REGISTRADOS EN EL ARCHIVO clientes.txt =================
+            elif opcion_principal == 5:
+                resetear_archivo_datos()
+                print("Los registros han sido borrados.\n")
+
+            # ================= SALIDA =================
+            elif opcion_principal == 6:
+                for cliente in self.clientes:
+                    guardar_o_actualizar_cliente(cliente.cedula, cliente.nombre, cliente.historial_compras)
+                print("Saliendo...\n")
                 break
+                
+                
