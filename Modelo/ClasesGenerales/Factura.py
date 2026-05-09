@@ -14,7 +14,6 @@ class Factura:
     def agregar_producto(self, producto):
         self.lista_productos.append(producto)
         
-        # 👇 soporte para ambos tipos
         if hasattr(producto, 'precio'):
             self.valor_total += producto.precio
         elif hasattr(producto, 'valor'):

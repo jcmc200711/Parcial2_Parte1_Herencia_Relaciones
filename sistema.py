@@ -215,7 +215,7 @@ class Sistema:
 
                 self.agregar_cliente(cliente)
 
-                print(self.factura_actual)
+                print(self.factura_actual) #Breakpoint para el debug
 
             # ================= BUSCAR CLIENTE POR CEDULA =================
             elif opcion_principal == 4:
