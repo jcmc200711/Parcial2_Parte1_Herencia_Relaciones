@@ -18,12 +18,12 @@ Sistema desarrollado en Python utilizando Programación Orientada a Objetos (POO
  **Generación de facturas:**
   - Cálculo automático del total
   - Visualización estructurada
+  - Multiples facturas asociadas a un solo cliente
+  - Busqueda de facturas por cédula
 
  **Validación de datos:**
   - Entradas numéricas
   - Cadenas de texto
   - Fechas
-  - Multiples facturas asociadas a un solo cliente
-  - Busqueda de facturas por cédula
 
 Proyecto académico desarrollado para la Universidad Tecnológica de Pereira en la asignatura de Programación IV.
