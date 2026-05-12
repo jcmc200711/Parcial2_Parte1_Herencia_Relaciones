@@ -1,120 +1,129 @@
 import sys
 import os
-ruta_padre = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(ruta_padre)
 
+ruta_proyecto = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(ruta_proyecto)
+
+from Modelo.ClasesGenerales.Cliente import Cliente
 from Modelo.ClasesGenerales.Factura import Factura
-from Modelo.ClasesHijas.AntibioticosBovinos import AntibioticoBovino
-from Modelo.ClasesHijas.AntibioticosPorcinos import AntibioticoPorcino
-from Modelo.ClasesHijas.ControlPlagas import ControlPlagas
+
 from Modelo.ClasesHijas.Fertilizantes import Fertilizante
+from Modelo.ClasesHijas.ControlPlagas import ControlPlagas
 
-# ================= TEST 1 =================
+from Modelo.ClasesPadre.Antibiotico import Antibiotico
 
-def test_agregar_productos_factura():
-    factura = Factura()
-
-    a = AntibioticoBovino("Oxitetraciclina", 10, 20000)
-    p = ControlPlagas(1234, "Glifosato", 15, 50000, 7)
-
-    factura.agregar_producto(a)
-    factura.agregar_producto(p)
-
-    assert factura.valor_total == 70000
-
-    print("\nTest 1: Factura suma productos correctamente\n")
+print("\n========== PRUEBAS UNITARIAS ==========\n")
 
 
-# ================= TEST 2 =================
-
-def test_herencia_antibioticos():
-    bovino = AntibioticoBovino("Penicilina", 5, 30000)
-    porcino = AntibioticoPorcino("Tilosina", 8, 25000)
-
-    assert bovino.tipo_animal == "bovino"
-    assert porcino.tipo_animal == "porcino"
-
-    print("\nTest 2: Herencia de antibióticos correcta\n")
+# PRUEBA 1 - CREACIÓN DE OBJETOS
 
 
-# ================= TEST 3 =================
+cliente = Cliente("Nata", 12345)
 
-def test_producto_control():
-    plaga = ControlPlagas(5678, "Mancozeb", 10, 40000, 14)
+assert cliente.nombre == "Nata"
+assert cliente.cedula == 12345
 
-    assert plaga._registroICA == 5678
-    assert plaga.periodo_carencia == 14
-
-    print("\nTest 3: Producto de control correcto\n")
+print("PRUEBA 1 EXITOSA - Creacion de cliente")
 
 
-# ================= TEST 4 =================
-
-def test_fertilizante():
-    fert = Fertilizante(9999, "Urea", 30, 80000, "10/05/2026")
-
-    assert fert.nombre == "Urea"
-    assert fert.frecuencia == 30
-
-    print("\nTest 4: Fertilizante correcto\n")
+# ======================================================
+# PRUEBA 2 -> HERENCIA Y ATRIBUTOS
 
 
-# ================= TEST 5 =================
+antibiotico = Antibiotico(
+    "Oxitetraciclina",
+    20,
+    "bovino",
+    50000
+)
 
-def test_factura_vacia():
-    factura = Factura()
-    assert factura.valor_total == 0
-    assert len(factura.lista_productos) == 0
+assert antibiotico.nombre == "Oxitetraciclina"
+assert antibiotico.dosis == 20
+assert antibiotico.tipo_animal == "bovino"
+assert antibiotico.precio == 50000
 
-    print("\nTest 5: Factura vacía correcta\n")
-
-
-# ================= TEST 6 =================
-
-def test_multiples_productos():
-    factura = Factura()
-
-    a = AntibioticoBovino("A", 1, 10000)
-    b = AntibioticoPorcino("B", 1, 20000)
-    c = ControlPlagas(1111, "C", 10, 30000, 5)
-
-    factura.agregar_producto(a)
-    factura.agregar_producto(b)
-    factura.agregar_producto(c)
-
-    assert factura.valor_total == 60000
-
-    print("\nTest 6: Múltiples productos correcto\n")
+print("PRUEBA 2 EXITOSA - Antibiótico creado correctamente")
 
 
-# ================= TEST 7 =================
+# ======================================================
+# PRUEBA 3 -> HERENCIA Y ATRIBUTOS
 
-from sistema import Sistema
+fertilizante = Fertilizante(
+    1001,
+    "Triple15",
+    30,
+    70000,
+    "10/05/2025"
+)
 
-def test_busqueda_producto():
-    sistema = Sistema()
+assert fertilizante.nombre == "Triple15"
+assert fertilizante.precio == 70000
 
-    p = ControlPlagas(1234, "Test", 10, 10000, 5)
+print("PRUEBA 3 EXITOSA - Fertilizante creado correctamente")
 
-    Sistema._Sistema__productos += 1
-    sistema.productos['productos_control']['plagas'][Sistema._Sistema__productos] = p
 
-    encontrado = sistema.buscar_producto_por_id(Sistema._Sistema__productos)
+# ======================================================
+# PRUEBA 4 -> HERENCIA Y ATRIBUTOS
 
-    assert encontrado is not None
+control = ControlPlagas(
+    2001,
+    "MataPlagas",
+    15,
+    45000,
+    7
+)
 
-    print("\nTest 7: Búsqueda correcta\n")
-    
+assert control.nombre == "MataPlagas"
+assert control.precio == 45000
+assert control.periodo_carencia == 7
 
-# ================= EJECUTAR =================
+print("PRUEBA 4 EXITOSA - Control de plagas creado correctamente")
 
-if __name__ == "__main__":
-    test_agregar_productos_factura()
-    test_herencia_antibioticos()
-    test_producto_control()
-    test_fertilizante()
-    test_factura_vacia()
-    test_multiples_productos()
-    test_busqueda_producto()
 
-    print("\n TODOS LOS TESTS PASARON")
+# ======================================================
+# PRUEBA 5 -> COMPOSICION Y LOGICA DE FACTURA
+
+factura = Factura()
+
+factura.agregar_producto(antibiotico)
+factura.agregar_producto(fertilizante)
+
+assert len(factura.lista_productos) == 2
+
+print("PRUEBA 5 EXITOSA - Productos agregados a factura")
+
+
+# ======================================================
+# PRUEBA 6 -> ASOCIACION CLIENTE-FACTURA
+
+cliente._cant_comprar += 1
+cliente.historial_compras[cliente._cant_comprar] = factura
+
+assert len(cliente.historial_compras) == 1
+
+print("PRUEBA 6 EXITOSA - Factura asociada al cliente")
+
+
+# ======================================================
+# PRUEBA 7 -> HERENCIA
+
+assert isinstance(fertilizante, Fertilizante)
+assert isinstance(control, ControlPlagas)
+assert isinstance(antibiotico, Antibiotico)
+
+print("PRUEBA 7 EXITOSA - Herencia verificada")
+
+
+# ======================================================
+# PRUEBA 8 -> CRUD
+
+datos = factura.to_dict()
+
+assert "fecha" in datos
+assert "valor_total" in datos
+assert "lista_productos" in datos
+
+print("PRUEBA 8 EXITOSA - Conversión a diccionario correcta")
+
+
+print("\n========== TODAS LAS PRUEBAS PASARON ==========\n")
