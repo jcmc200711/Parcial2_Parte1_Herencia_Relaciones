@@ -14,10 +14,7 @@ class Factura:
     def agregar_producto(self, producto):
         self.lista_productos.append(producto)
         
-        if hasattr(producto, 'precio'):
-            self.valor_total += producto.precio
-        elif hasattr(producto, 'valor'):
-            self.valor_total += producto.valor
+        self.valor_total += producto.precio
 
     def to_dict(self):
         return {
