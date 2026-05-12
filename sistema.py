@@ -2,9 +2,7 @@ from Modelo.ClasesGenerales.Cliente import Cliente
 from Modelo.ClasesGenerales.Factura import Factura
 from Modelo.ClasesHijas.Fertilizantes import Fertilizante
 from Modelo.ClasesHijas.ControlPlagas import ControlPlagas
-from Modelo.ClasesHijas.AntibioticosBovinos import AntibioticoBovino
-from Modelo.ClasesHijas.AntibioticosPorcinos import AntibioticoPorcino
-
+from Modelo.ClasesPadre.Antibiotico import Antibiotico
 from UI.menu_opciones import menu_opciones
 from UI.verificar_cadenas import verificar_cadenas
 from UI.verificar_valores_numericos import verificar_valores_numericos
@@ -166,12 +164,12 @@ class Sistema:
                     precio = verificar_valores_numericos("Precio:")
 
                     if opcion_antibiotico == 1:
-                        producto = AntibioticoBovino(nombre, dosis, precio)
+                        producto = Antibiotico(nombre, dosis, "bovino", precio)
                         Sistema.__productos += 1
                         self.productos['antibioticos']['bovinos'][Sistema.__productos] = producto
 
                     else:
-                        producto = AntibioticoPorcino(nombre, dosis, precio)
+                        producto = Antibiotico(nombre, dosis, "porcino", precio)
                         Sistema.__productos += 1
                         self.productos['antibioticos']['porcinos'][Sistema.__productos] = producto
 
@@ -238,8 +236,12 @@ class Sistema:
 
             # ================= SALIDA =================
             elif opcion_principal == 6:
-                for cliente in self.clientes:
-                    guardar_o_actualizar_cliente(cliente.cedula, cliente.nombre, cliente.historial_compras)
+                for cliente in self.clientes.values():
+                    historial_limpio = {}
+                    for id_factura, factura_obj in cliente.historial_compras.items():
+                        historial_limpio[id_factura] = factura_obj.to_dict()
+
+                    guardar_o_actualizar_cliente(cliente.cedula, cliente.nombre, historial_limpio)
                 print("Saliendo...\n")
                 break
                 

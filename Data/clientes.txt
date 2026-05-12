@@ -1,1 +1,1 @@
-{'12': {'nombre': 'juan', 'facturas': {1: {'fecha': '2026-05-08', 'valor_total': 200000, 'lista_productos': ['fetilizan ($100000)', 'fetilizan ($100000)']}, '2': {'fecha': '2026-05-08', 'valor_total': 2000, 'lista_productos': ['porci ($2000)']}, '3': {'fecha': '2026-05-08', 'valor_total': 2000, 'lista_productos': ['por ($1000)', 'por ($1000)']}}}}
+{'12': {'nombre': 'juan', 'facturas': {'1': {'fecha': '2026-05-11', 'valor_total': 2000, 'lista_productos': ['porcineta ($1000)', 'porcineta ($1000)']}}}}
