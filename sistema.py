@@ -80,13 +80,11 @@ class Sistema:
             return
 
         for id_f, datos in facturas_dict.items():
-            # TODO lo de abajo debe estar indentado para que se repita por cada factura
             print("\n" + "="*40)
             print(f"FACTURA N°: {id_f}")
             print(f"FECHA: {datos.get('fecha')}")
             print("-" * 40)
         
-            # Esta parte estaba "afuera" en tu código:
             productos = datos.get('lista_productos', [])
             if not productos:
                 print("   (Factura sin productos registrados)")
@@ -154,7 +152,7 @@ class Sistema:
 
                 elif opcion_tipos_producto == 2:
 
-                    opcion_antibiotico = menu_opciones(
+                    tipo = menu_opciones(
                         "¿Tipo de antibiotico?\n",
                         ["1. Bovino\n", "2. Porcino\n"]
                     )
@@ -162,15 +160,15 @@ class Sistema:
                     nombre = verificar_cadenas("\nNombre:")
                     dosis = verificar_valores_numericos("Dosis:")
                     precio = verificar_valores_numericos("Precio:")
+                    tipo_animal = "bovino" if tipo == 1 else "porcino"
 
-                    if opcion_antibiotico == 1:
-                        producto = Antibiotico(nombre, dosis, "bovino", precio)
-                        Sistema.__productos += 1
+                    producto = Antibiotico(nombre, dosis, tipo_animal, precio)
+
+                    Sistema.__productos += 1
+  
+                    if tipo_animal == "bovino":
                         self.productos['antibioticos']['bovinos'][Sistema.__productos] = producto
-
                     else:
-                        producto = Antibiotico(nombre, dosis, "porcino", precio)
-                        Sistema.__productos += 1
                         self.productos['antibioticos']['porcinos'][Sistema.__productos] = producto
 
                 print("\n✔ Producto registrado correctamente\n")
@@ -207,11 +205,14 @@ class Sistema:
                 nombre = verificar_cadenas("\nNombre cliente:")
                 cedula = verificar_valores_numericos("Cédula:")
 
-                cliente = Cliente(nombre, cedula)
+                if cedula in self.clientes:
+                    cliente = self.clientes[cedula]
+                else:
+                    cliente = Cliente(nombre, cedula)
+                    self.agregar_cliente(cliente)
+
                 cliente._cant_comprar += 1
                 cliente.historial_compras[cliente._cant_comprar] = self.factura_actual
-
-                self.agregar_cliente(cliente)
 
                 print(self.factura_actual) #Breakpoint para el debug
 
@@ -244,5 +245,3 @@ class Sistema:
                     guardar_o_actualizar_cliente(cliente.cedula, cliente.nombre, historial_limpio)
                 print("Saliendo...\n")
                 break
-                
-                
